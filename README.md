@@ -6,6 +6,7 @@ Tecnologías utilizadas:
 - [pnpm](https://pnpm.io/)
 - [react](https://react.dev/)
 - [vite](https://vitejs.dev)
+- [typescript](https://typescriptlang.org)
 
 <details>
   <summary>Instalar Dependencias</summary>

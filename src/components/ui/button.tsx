@@ -18,7 +18,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
     info: 'bg-blue-600 text-neutral-100 border border-blue-600 hover:bg-transparent hover:text-blue-600',
     light: 'bg-neutral-100 text-neutral-800 border border-neutral-100 hover:bg-neutral-200',
     dark: 'bg-neutral-800 text-neutral-100 border border-neutral-800 hover:bg-neutral-700',
-    ghost: 'bg-transparent text-neutral-800 border border-transparent hover:bg-neutral-100',
+    ghost: 'bg-transparent text-neutral-800 dark:text-neutral-100 border border-transparent hover:bg-neutral-300 dark:hover:bg-neutral-100 dark:hover:text-neutral-800',
     link: "text-red-600 hover:text-red-700 decoration-transparent hover:decoration-red-600 transform underline underline-offset-0 transition-all duration-300 hover:underline hover:underline-offset-4"
   }
 

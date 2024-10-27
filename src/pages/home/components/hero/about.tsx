@@ -13,7 +13,7 @@ const About = () => <section className={"w-full py-12 md:py-24 lg:py-32 xl:py-48
       </div>
       <div className="space-x-4">
         <Button>Comenzar ahora</Button>
-        <Button variant="outline">Saber más</Button>
+        <Button variant="ghost">Saber más</Button>
       </div>
     </div>
   </div>

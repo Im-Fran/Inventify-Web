@@ -2,7 +2,7 @@ import React from "react"
 import {clsx} from "clsx";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  variant?: 'default' | 'secondary' | 'danger' | 'warning' | 'success' | 'info' | 'light' | 'dark' | 'ghost' | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
 }
 
@@ -10,14 +10,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
   const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer"
 
   const variants = {
-    default: "bg-pink-600 text-primary-foreground hover:bg-pink-600/70",
-    destructive: "bg-red-600 text-primary-foreground hover:bg-red-600/70",
-    success: "bg-green-600 text-primary-foreground hover:bg-green-600/70",
-    warning: "bg-yellow-600 text-primary-foreground hover:bg-yellow-600/70",
-    info: "bg-blue-600 text-primary-foreground hover:bg-blue-600/70",
-    outline: "border border-neutral-300 text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-700 hover:bg-neutral-50",
-    secondary: "bg-neutral-700 text-neutral-100 hover:bg-neutral-600",
-    ghost: "text-neutral-700 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-700",
+    default: 'bg-pink-600 text-neutral-100 border border-pink-600 hover:bg-transparent hover:text-pink-600',
+    secondary: 'bg-neutral-700 text-neutral-100 border border-neutral-700 hover:bg-transparent hover:text-neutral-700',
+    danger: 'bg-red-600 text-neutral-100 border border-red-600 hover:bg-transparent hover:text-red-600',
+    warning: 'bg-yellow-600 text-neutral-100 border border-yellow-600 hover:bg-transparent hover:text-yellow-600',
+    success: 'bg-green-600 text-neutral-100 border border-green-600 hover:bg-transparent hover:text-green-600',
+    info: 'bg-blue-600 text-neutral-100 border border-blue-600 hover:bg-transparent hover:text-blue-600',
+    light: 'bg-neutral-100 text-neutral-800 border border-neutral-100 hover:bg-neutral-200',
+    dark: 'bg-neutral-800 text-neutral-100 border border-neutral-800 hover:bg-neutral-700',
+    ghost: 'bg-transparent text-neutral-800 dark:text-neutral-100 border border-transparent hover:bg-neutral-300 dark:hover:bg-neutral-100 dark:hover:text-neutral-800',
     link: "text-red-600 hover:text-red-700 decoration-transparent hover:decoration-red-600 transform underline underline-offset-0 transition-all duration-300 hover:underline hover:underline-offset-4"
   }
 

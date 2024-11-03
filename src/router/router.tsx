@@ -1,7 +1,8 @@
 import {createBrowserRouter} from "react-router-dom";
-import Layout from "@/layout/Layout.tsx";
+import Layout from "@/components/layout/layout.tsx";
 import Home from "@/pages/home/home.tsx";
 import Login from "@/pages/auth/login/login.tsx";
+import Register from "@/pages/auth/register/register.tsx";
 
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
       {
         path: '/login',
         element: <Login/>
+      },
+      {
+        path: '/register',
+        element: <Register/>
       }
     ],
   },

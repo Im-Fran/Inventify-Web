@@ -2,7 +2,7 @@ import React, {forwardRef} from "react"
 
 const Card = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({className = "", ...props}, ref) => <div
   ref={ref}
-  className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`}
+  className={`rounded-lg border bg-zinc-100 dark:bg-zinc-800 text-neutral-800 dark:text-neutral-100 shadow-sm ${className}`}
   {...props}
 />)
 Card.displayName = "Card"
@@ -23,7 +23,7 @@ CardTitle.displayName = "CardTitle"
 
 const CardDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(({className = "", ...props}, ref) => <p
   ref={ref}
-  className={`text-sm text-muted-foreground ${className}`}
+  className={`text-sm text-neutral-500 dark:text-neutral-300 ${className}`}
   {...props}
 />)
 CardDescription.displayName = "CardDescription"

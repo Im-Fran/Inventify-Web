@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+input[type="password"] {
+    -webkit-text-security: disc;
+}

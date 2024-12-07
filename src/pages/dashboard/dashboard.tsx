@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Bell, Home, Package, Search, Settings, User, Plus, Edit, Trash2, ChevronDown } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/forms/input.tsx"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button/button.tsx"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/forms/label.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/forms/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 // Datos simulados de productos
@@ -28,7 +28,7 @@ export default function DashboardInventario() {
   const [productos, setProductos] = useState(productosIniciales)
   const [dialogoAbierto, setDialogoAbierto] = useState(false)
   const [productoEditando, setProductoEditando] = useState(null)
-  const [nuevoProducto, setNuevoProducto] = useState({ nombre: '', cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
+  const [nuevoProducto, setNuevoProducto] = useState({ nombre: '', id: 0, cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
   const [busqueda, setBusqueda] = useState('')
   const [filtro, setFiltro] = useState('nombre')
   const [productosFiltrados, setProductosFiltrados] = useState(productos)
@@ -64,7 +64,7 @@ export default function DashboardInventario() {
 
   const abrirDialogoNuevoProducto = () => {
     setProductoEditando(null)
-    setNuevoProducto({ nombre: '', cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
+    setNuevoProducto({ nombre: '', id: 0,cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
     setDialogoAbierto(true)
   }
 
@@ -131,7 +131,7 @@ export default function DashboardInventario() {
               />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="ml-2">
+                  <Button variant="ghost" className="ml-2">
                     Filtrar por <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

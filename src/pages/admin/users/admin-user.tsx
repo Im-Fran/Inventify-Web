@@ -1,8 +1,7 @@
-import React from 'react'
-import { Bell, Home, Package, Search, Settings, User, Users, Mail, Calendar } from 'lucide-react'
+import { Bell, Home, Package, Search, Settings, User, Users, Calendar } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/forms/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
 import { Badge } from "@/components/ui/badge"
 
 // Datos simulados de usuarios

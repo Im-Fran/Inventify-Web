@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Shield, Plus, Trash2, Save, X } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/forms/input.tsx"
-import { Label } from "@/components/ui/forms/label.tsx"
-import { Button } from "@/components/ui/button/button.tsx"
-import { Checkbox } from "@/components/ui/forms/checkbox.tsx"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/forms/input"
+import { Label } from "@/components/ui/forms/label"
+import { Button } from "@/components/ui/button/button"
+import { Checkbox } from "@/components/ui/forms/checkbox"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 // Datos simulados de roles y permisos
@@ -136,7 +136,7 @@ export default function AdminRolesPermisos() {
                     <Checkbox
                       id={permiso.id}
                       checked={rolEditando ? rolEditando.permisos.includes(permiso.id) : nuevoRol.permisos.includes(permiso.id)}
-                      onCheckedChange={() => togglePermiso(permiso.id)}
+                      onChange={() => togglePermiso(permiso.id)}
                     />
                     <label
                       htmlFor={permiso.id}
@@ -150,7 +150,7 @@ export default function AdminRolesPermisos() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogoAbierto(false)}>
+            <Button variant="ghost" onClick={() => setDialogoAbierto(false)}>
               <X className="mr-2 h-4 w-4" /> Cancelar
             </Button>
             <Button onClick={handleGuardarRol}>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { User, Mail, Lock, Calendar, MapPin, Phone } from 'lucide-react'
+//import { User, Mail, Lock, Calendar, MapPin, Phone } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/forms/input.tsx"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/forms/label"
+import { Button } from "@/components/ui/button/button"
+import { Textarea } from "@/components/ui/forms/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/forms/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function EditarPerfil() {
@@ -65,7 +65,7 @@ export default function EditarPerfil() {
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleInputChange}
-                icon={<User className="w-4 h-4 text-muted-foreground" />}
+                //icon={<User className="w-4 h-4 text-muted-foreground" />}
               />
             </div>
             <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function EditarPerfil() {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                icon={<Mail className="w-4 h-4 text-muted-foreground" />}
+                /*icon={<Mail className="w-4 h-4 text-muted-foreground" />}*/
               />
             </div>
             <div className="space-y-2">
@@ -86,7 +86,7 @@ export default function EditarPerfil() {
                 name="telefono"
                 value={formData.telefono}
                 onChange={handleInputChange}
-                icon={<Phone className="w-4 h-4 text-muted-foreground" />}
+                //icon={<Phone className="w-4 h-4 text-muted-foreground" />}
               />
             </div>
             <div className="space-y-2">
@@ -97,7 +97,7 @@ export default function EditarPerfil() {
                 type="date"
                 value={formData.fechaNacimiento}
                 onChange={handleInputChange}
-                icon={<Calendar className="w-4 h-4 text-muted-foreground" />}
+                //icon={<Calendar className="w-4 h-4 text-muted-foreground" />}
               />
             </div>
             <div className="space-y-2">
@@ -107,7 +107,7 @@ export default function EditarPerfil() {
                 name="direccion"
                 value={formData.direccion}
                 onChange={handleInputChange}
-                icon={<MapPin className="w-4 h-4 text-muted-foreground" />}
+                //icon={<MapPin className="w-4 h-4 text-muted-foreground" />}
               />
             </div>
             <div className="space-y-2">
@@ -141,7 +141,7 @@ export default function EditarPerfil() {
                 name="password"
                 type="password"
                 placeholder="Nueva contraseña"
-                icon={<Lock className="w-4 h-4 text-muted-foreground" />}
+                //icon={<Lock className="w-4 h-4 text-muted-foreground" />}
               />
             </div>
           </CardContent>

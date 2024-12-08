@@ -1,6 +1,6 @@
 import {FC, LabelHTMLAttributes} from "react";
 
-interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
+export type LabelProps = LabelHTMLAttributes<HTMLLabelElement> & {
   className?: string
 }
 

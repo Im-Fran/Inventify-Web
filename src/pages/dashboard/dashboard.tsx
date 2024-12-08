@@ -3,7 +3,7 @@ import { Bell, Home, Package, Search, Settings, User, Plus, Edit, Trash2, Chevro
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/forms/input.tsx"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge/badge.tsx"
 import { Button } from "@/components/ui/button/button.tsx"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/forms/label.tsx"

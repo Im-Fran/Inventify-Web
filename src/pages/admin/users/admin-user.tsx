@@ -2,7 +2,7 @@ import { Bell, Home, Package, Search, Settings, User, Users, Calendar } from 'lu
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/forms/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge/badge.tsx"
 
 // Datos simulados de usuarios
 const usuarios = [

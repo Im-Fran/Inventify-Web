@@ -8,11 +8,9 @@ const Navigation = () => <header className="px-4 lg:px-6 h-14 flex items-center 
     <span className="ml-2 text-2xl font-bold">RubyBox</span>
   </Link>
   <nav className="ml-auto flex gap-4 sm:gap-6">
-    <Button>
-      <Link className="text-sm font-medium" to={"/login"}>
-        Acceder
-      </Link>
-    </Button>
+    <Link className="text-sm font-medium" to={"/auth/login"}>
+      <Button>Acceder</Button>
+    </Link>
   </nav>
 </header>
 

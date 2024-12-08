@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button/button.tsx"
 import { Input } from "@/components/ui/forms/input.tsx"
 import { Label } from "@/components/ui/forms/label.tsx"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {axios} from "@/http/http.ts";
 import {Checkbox} from "@/components/ui/forms/checkbox.tsx";
 import {Error} from "@/components/ui/forms/error.tsx";
@@ -34,6 +34,10 @@ const Login = () => {
     toast.success('¡Bienvenido de vuelta!')
     navigate('/')
   }
+
+  useEffect(() => {
+
+  }, []);
 
   return <form onSubmit={submit} className={"flex items-center justify-center min-h-screen w-full"}>
     <Card className={"w-full max-w-md"}>

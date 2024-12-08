@@ -13,7 +13,7 @@ const About = () => <section className={"w-full py-12 md:py-24 lg:py-32 xl:py-48
         </p>
       </div>
       <div className="space-x-4">
-        <Link to={"/register"}><Button>Comenzar ahora</Button></Link>
+        <Link to={"/auth/register"}><Button>Comenzar ahora</Button></Link>
         <Button variant="ghost">Saber más</Button>
       </div>
     </div>

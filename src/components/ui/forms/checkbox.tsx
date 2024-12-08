@@ -1,6 +1,6 @@
 import { FC, InputHTMLAttributes } from "react";
 
-interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
+export type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
 }
 

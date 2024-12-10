@@ -6,10 +6,10 @@ import {useLaravelErrors} from "@/http/error.ts";
 import toast from "react-hot-toast";
 import RegisterForm from "@/pages/auth/register/components/registerForm.tsx";
 import {useLocalStorage} from "@uidotdev/usehooks";
-import {User} from "@/types/models/user.ts";
+import {User, userAvatarUrl} from "@/types/models/user.ts";
 
 const Register = () => {
-  const [login] = useLocalStorage<string | null>('login', null)
+  const [login] = useLocalStorage<User | null>('login', null)
   const [users, setUsers] = useLocalStorage<User[]>('users', [])
 
   const [name, setName] = useState('')
@@ -44,9 +44,9 @@ const Register = () => {
       return
     }
 
-    setUsers([...users, { name, email, password }])
+    setUsers([...users, { name, email: email.toLowerCase(), password, avatar: userAvatarUrl(email.toLowerCase()) }])
 
-    navigate('/')
+    navigate('/auth/login')
     toast.success('Usuario registrado correctamente.', {
       duration: 5000
     })

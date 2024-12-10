@@ -9,7 +9,7 @@ import {useLocalStorage} from "@uidotdev/usehooks";
 import {User} from "@/types/models/user.ts";
 
 const Login = () => {
-  const [login, setLogin] = useLocalStorage<string | null>('login', null)
+  const [login, setLogin] = useLocalStorage<User | null>('login', null)
   const [users] = useLocalStorage<User[]>('users', [])
 
   const [email, setEmail] = useState<string>('')
@@ -33,15 +33,16 @@ const Login = () => {
       return
     }
 
-    if(!users.find((user: User) => user.email === email.toLowerCase() && user.password === password)) {
+    const user = users.find((user: User) => user.email === email.toLowerCase() && user.password === password)
+    if(!user) {
       pushError({ field: 'register', message: 'Esas credenciales no existen' })
       return
     }
 
-    setLogin(email.toLowerCase())
+    setLogin(user)
 
     // Redirect to home.
-    navigate('/auth/login')
+    navigate('/dashboard')
     toast.success('¡Bienvenido de vuelta!', {
       duration: 5000
     })

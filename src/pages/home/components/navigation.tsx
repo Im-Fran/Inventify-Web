@@ -2,9 +2,10 @@ import {Link} from "react-router-dom";
 import {Box} from "lucide-react";
 import {Button} from "@/components/ui/button/button.tsx";
 import {useLocalStorage} from "@uidotdev/usehooks";
+import { User } from "@/types/models/user";
 
 const Navigation = () => {
-  const [login, setLogin] = useLocalStorage<string | null>('login', null)
+  const [login, setLogin] = useLocalStorage<User | null>('login', null)
 
   const onLogout = () => setLogin(null)
 

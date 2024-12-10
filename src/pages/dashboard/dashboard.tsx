@@ -1,74 +1,92 @@
-import { useState, useEffect } from 'react'
-import { Bell, Home, Package, Search, Settings, User, Plus, Edit, Trash2, ChevronDown } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Home, Package, Search, Settings, User as UserIcon, Plus, Edit, Trash2, X, Camera } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/forms/input.tsx"
+import { Input } from "@/components/ui/forms/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table"
-import { Badge } from "@/components/ui/badge/badge.tsx"
+import { Badge } from "@/components/ui/badge/badge"
 import { Button } from "@/components/ui/button/button.tsx"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/forms/label.tsx"
+import { Label } from "@/components/ui/forms/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/forms/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {currencyFormat, Product, products} from "@/types/models/product"
+import { useLocalStorage } from '@uidotdev/usehooks'
+import { User } from '@/types/models/user'
+import { SearchTag } from '@/types/models/search_tag'
+import Quagga from '@ericblade/quagga2';
 
-// Datos simulados de productos
-const productosIniciales = [
-  { id: 1, nombre: 'Collar de Rubí', cantidad: 15, stockMinimo: 5, precio: 299.99, categoria: 'Joyería' },
-  { id: 2, nombre: 'Pendientes de Rubí', cantidad: 20, stockMinimo: 8, precio: 199.99, categoria: 'Joyería' },
-  { id: 3, nombre: 'Anillo de Rubí', cantidad: 10, stockMinimo: 3, precio: 249.99, categoria: 'Joyería' },
-  { id: 4, nombre: 'Pulsera de Rubí', cantidad: 5, stockMinimo: 2, precio: 179.99, categoria: 'Joyería' },
-  { id: 5, nombre: 'Colgante de Rubí', cantidad: 8, stockMinimo: 4, precio: 149.99, categoria: 'Joyería' },
-  { id: 6, nombre: 'Gema de Rubí', cantidad: 30, stockMinimo: 10, precio: 99.99, categoria: 'Piedras Preciosas' },
-  { id: 7, nombre: 'Rubí en Bruto', cantidad: 25, stockMinimo: 5, precio: 79.99, categoria: 'Piedras Preciosas' },
-  { id: 8, nombre: 'Caja de Joyería', cantidad: 40, stockMinimo: 15, precio: 39.99, categoria: 'Accesorios' },
-]
-
-const categorias = ['Joyería', 'Piedras Preciosas', 'Accesorios']
-
-export default function DashboardInventario() {
-  const [productos, setProductos] = useState(productosIniciales)
+const DashboardInventario = () => {
+  const [login] = useLocalStorage<User | null>('login', null);
+  const [productos, setProductos] = useLocalStorage<Product[]>('products', products)
   const [dialogoAbierto, setDialogoAbierto] = useState(false)
-  const [productoEditando, setProductoEditando] = useState(null)
-  const [nuevoProducto, setNuevoProducto] = useState({ nombre: '', id: 0, cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
-  const [busqueda, setBusqueda] = useState('')
-  const [filtro, setFiltro] = useState('nombre')
+  const [productoEditando, setProductoEditando] = useState<Product | null>(null)
+  const [nuevoProducto, setNuevoProducto] = useState<Product>({
+    name: '',
+    id: '',
+    stock: 0,
+    minStock: 0,
+    price: 0,
+    category: '',
+    description: '',
+    image: '',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+  const [busqueda, setBusqueda] = useState<SearchTag[]>([])
   const [productosFiltrados, setProductosFiltrados] = useState(productos)
+  const [tagDialogOpen, setTagDialogOpen] = useState(false)
+  const [newTagKind, setNewTagKind] = useState('nombre')
+  const [newTagValue, setNewTagValue] = useState('')
+  const [qrReaderOpen, setQrReaderOpen] = useState(false)
+  const scannerRef = useRef(null)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  useEffect(() => {
-    filtrarProductos()
-  }, [busqueda, filtro, productos])
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
-  const filtrarProductos = () => {
+  const paginatedProducts = productosFiltrados.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const filter = () => {
     let resultados = [...productos]
-    if (busqueda) {
-      switch (filtro) {
+
+    if (busqueda.length === 0) {
+      setProductosFiltrados(resultados)
+      return
+    }
+
+    busqueda.forEach(tag => {
+      switch (tag.key.toLowerCase()) {
         case 'nombre':
-          resultados = resultados.filter(p => p.nombre.toLowerCase().includes(busqueda.toLowerCase()))
+          resultados = resultados.filter(p => p.name.toLowerCase().includes(tag.value.toLowerCase()))
           break
         case 'precio':
-          resultados = resultados.filter(p => p.precio.toString().includes(busqueda))
+          resultados = resultados.filter(p => p.price.toString().includes(tag.value))
           break
         case 'stock':
-          resultados = resultados.sort((a, b) => {
-            const stockA = a.cantidad / a.stockMinimo
-            const stockB = b.cantidad / b.stockMinimo
-            return stockB - stockA
-          })
+          resultados = resultados.filter(p => p.stock.toString().includes(tag.value))
           break
         case 'categoria':
-          resultados = resultados.filter(p => p.categoria.toLowerCase().includes(busqueda.toLowerCase()))
+          resultados = resultados.filter(p => p.category.toLowerCase().includes(tag.value.toLowerCase()))
+          break
+        default:
           break
       }
-    }
+    })
+
     setProductosFiltrados(resultados)
   }
 
   const abrirDialogoNuevoProducto = () => {
     setProductoEditando(null)
-    setNuevoProducto({ nombre: '', id: 0,cantidad: 0, stockMinimo: 0, precio: 0, categoria: '' })
+    setNuevoProducto({ name: '', id: '', stock: 0, minStock: 0, price: 0, category: '', description: '', image: '', createdAt: new Date(), updatedAt: new Date() })
     setDialogoAbierto(true)
   }
 
-  const abrirDialogoEditarProducto = (producto) => {
+  const abrirDialogoEditarProducto = (producto: Product) => {
     setProductoEditando(producto)
     setNuevoProducto({ ...producto })
     setDialogoAbierto(true)
@@ -78,21 +96,56 @@ export default function DashboardInventario() {
     if (productoEditando) {
       setProductos(productos.map(p => p.id === productoEditando.id ? nuevoProducto : p))
     } else {
-      setProductos([...productos, { ...nuevoProducto, id: Date.now() }])
+      setProductos([...productos, { ...nuevoProducto }])
     }
     setDialogoAbierto(false)
+    filter();
   }
 
-  const handleEliminarProducto = (id) => {
+  const handleEliminarProducto = (id: string) => {
     setProductos(productos.filter(p => p.id !== id))
+    filter();
   }
+
+  const handleAddTag = () => {
+    // setBusqueda(prev => [...prev, {key: newTagKind, value: newTagValue}])
+    setTagDialogOpen(false)
+    setNewTagKind('nombre')
+    setNewTagValue('')
+    filter();
+  }
+
+  // const handleRemoveTag = (tagToRemove: SearchTag) => {
+  //   // setBusqueda(prev => prev.filter(tag => tag !== tagToRemove))
+  //   filter();
+  // }
+  //
+  // const handleScan = (data: string | null) => {
+  //   if (data) {
+  //     setNuevoProducto({ ...nuevoProducto, id: data });
+  //     setQrReaderOpen(false);
+  //   }
+  // };
+  //
+  // const handleError = (err: any) => {
+  //   console.error(err);
+  // };
+
+  const initScanner = async () => {
+    // Implement quagga scanner
+    setQrReaderOpen(true);
+  }
+
+  useEffect(() => {
+    filter()
+  }, [busqueda])
 
   return (
     <div className="flex h-screen bg-background">
       {/* Barra lateral */}
       <aside className="w-64 bg-card text-card-foreground">
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-primary">Ruby Box</h1>
+          <h1 className="text-2xl font-bold text-pink-500">RubyBox</h1>
         </div>
         <nav className="mt-6">
           <a href="#" className="flex items-center px-6 py-3 text-foreground hover:bg-accent">
@@ -104,7 +157,7 @@ export default function DashboardInventario() {
             Inventario
           </a>
           <a href="#" className="flex items-center px-6 py-3 text-foreground hover:bg-accent">
-            <User className="w-5 h-5 mr-3" />
+            <UserIcon className="w-5 h-5 mr-3" />
             Clientes
           </a>
           <a href="#" className="flex items-center px-6 py-3 text-foreground hover:bg-accent">
@@ -118,41 +171,38 @@ export default function DashboardInventario() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Encabezado */}
         <header className="flex items-center justify-between px-6 py-4 bg-background border-b">
-          <h2 className="text-2xl font-semibold text-foreground">Inventario</h2>
-          <div className="flex items-center">
-            <div className="relative mr-4 flex items-center">
+          <div className="flex justify-between items-center w-full">
+            <h2 className="text-2xl font-semibold text-foreground">Inventario</h2>
+            <div className="relative mr-4 flex items-center w-1/2">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Buscar productos..."
-                className="pl-10 w-64"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="ml-2">
-                    Filtrar por <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setFiltro('nombre')}>Nombre</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFiltro('precio')}>Precio</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFiltro('stock')}>Stock</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFiltro('categoria')}>Categoría</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* 
+              <div className="pl-10 w-full min-h-12 flex flex-wrap items-center gap-2 overflow-x-auto border rounded-md p-2">
+                {busqueda.map((tag, index) => (
+                  <Badge key={index} variant="secondary" className="flex items-center">
+                    {tag.key}: {tag.value}
+                    <X className="h-4 w-4 ml-2 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
+                  </Badge>
+                ))}
+              </div>
+              
+              <Button variant="ghost" className="ml-2" onClick={() => setTagDialogOpen(true)}>
+                <Plus className="h-4 w-4" />
+              </Button>
+              */}
+                <Input
+                  placeholder="Buscar productos..."
+                  className="w-full pl-10"
+                  onChange={(e) => setBusqueda([{ key: 'nombre', value: e.target.value }])}
+                  value={busqueda.find(tag => tag.key === 'nombre')?.value || ''}
+                />
             </div>
-            <button className="p-2 text-foreground hover:bg-accent rounded-full">
-              <Bell className="w-6 h-6" />
-            </button>
             <button className="flex items-center ml-4 text-sm font-medium text-foreground hover:text-accent">
               <img
                 className="w-8 h-8 rounded-full mr-2"
-                src="/placeholder.svg?height=32&width=32"
+                src={login?.avatar}
                 alt="Avatar del usuario"
               />
-              Juan Pérez
+              {login?.name}
             </button>
           </div>
         </header>
@@ -175,7 +225,7 @@ export default function DashboardInventario() {
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{productos.filter(p => p.cantidad < p.stockMinimo).length}</div>
+                <div className="text-2xl font-bold">{productos.filter(p => p.stock < p.minStock).length}</div>
               </CardContent>
             </Card>
             <Card>
@@ -184,7 +234,7 @@ export default function DashboardInventario() {
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{productos.reduce((sum, p) => sum + p.cantidad, 0)}</div>
+                <div className="text-2xl font-bold">{productos.reduce((sum, p) => sum + p.stock, 0)}</div>
               </CardContent>
             </Card>
             <Card>
@@ -194,7 +244,7 @@ export default function DashboardInventario() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ${productos.reduce((sum, p) => sum + p.precio * p.cantidad, 0).toFixed(2)}
+                  {currencyFormat.format(productos.reduce((sum, p) => sum + p.price * p.stock, 0))}
                 </div>
               </CardContent>
             </Card>
@@ -202,9 +252,9 @@ export default function DashboardInventario() {
 
           {/* Tabla de Inventario */}
           <Card>
-            <CardHeader className="flex justify-between items-center">
+            <CardHeader className="flex flex-row w-full justify-between items-center">
               <CardTitle>Inventario</CardTitle>
-              <Button onClick={abrirDialogoNuevoProducto}>
+              <Button onClick={() => abrirDialogoNuevoProducto()}>
                 <Plus className="mr-2 h-4 w-4" /> Añadir Producto
               </Button>
             </CardHeader>
@@ -222,16 +272,16 @@ export default function DashboardInventario() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {productosFiltrados.map((producto) => (
+                  {paginatedProducts.map((producto) => (
                     <TableRow key={producto.id}>
-                      <TableCell className="font-medium">{producto.nombre}</TableCell>
-                      <TableCell>{producto.categoria}</TableCell>
-                      <TableCell>{producto.cantidad}</TableCell>
-                      <TableCell>{producto.stockMinimo}</TableCell>
-                      <TableCell>${producto.precio.toFixed(2)}</TableCell>
+                      <TableCell className="font-medium text-left">{producto.name}</TableCell>
+                      <TableCell>{producto.category}</TableCell>
+                      <TableCell>{producto.stock}</TableCell>
+                      <TableCell>{producto.minStock}</TableCell>
+                      <TableCell>{currencyFormat.format(producto.price)}</TableCell>
                       <TableCell>
-                        <Badge variant={producto.cantidad < producto.stockMinimo ? "destructive" : "success"}>
-                          {producto.cantidad < producto.stockMinimo ? "Bajo Stock" : "En Stock"}
+                        <Badge variant={producto.stock < producto.minStock ? "destructive" : "success"}>
+                          {producto.stock < producto.minStock ? (producto.stock == 0 ? "Sin" : "Bajo") : "En"} Stock
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -246,6 +296,25 @@ export default function DashboardInventario() {
                   ))}
                 </TableBody>
               </Table>
+              <div className="flex justify-between items-center mt-4">
+                <Button
+                  variant="ghost"
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Anterior
+                </Button>
+                <span>
+                  Página {currentPage} de {Math.ceil(productosFiltrados.length / itemsPerPage)}
+                </span>
+                <Button
+                  variant="ghost"
+                  disabled={currentPage === Math.ceil(productosFiltrados.length / itemsPerPage)}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Siguiente
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </main>
@@ -253,84 +322,159 @@ export default function DashboardInventario() {
 
       {/* Diálogo para añadir/editar producto */}
       <Dialog open={dialogoAbierto} onOpenChange={setDialogoAbierto}>
-        <DialogContent>
+        <DialogContent className="bg-neutral-800">
           <DialogHeader>
-            <DialogTitle>{productoEditando ? 'Editar Producto' : 'Añadir Nuevo Producto'}</DialogTitle>
+            <DialogTitle className="text-neutral-50">{productoEditando ? 'Editar Producto' : 'Añadir Nuevo Producto'}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="nombre" className="text-right">
+              <Label htmlFor="barcode" className="text-right">
+                Código de Barras
+              </Label>
+              <div className="col-span-3 flex items-center gap-2.5">
+                <Input
+                  id="barcode"
+                  value={nuevoProducto.id}
+                  onChange={(e) => setNuevoProducto({...nuevoProducto, id: e.target.value})}
+                  className="flex-1"
+                />
+                <Button variant="ghost" size="sm" onClick={() => initScanner()}>
+                  <Camera className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
                 Nombre
               </Label>
               <Input
-                id="nombre"
-                value={nuevoProducto.nombre}
-                onChange={(e) => setNuevoProducto({...nuevoProducto, nombre: e.target.value})}
+                id="name"
+                value={nuevoProducto.name}
+                onChange={(e) => setNuevoProducto({...nuevoProducto, name: e.target.value})}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="categoria" className="text-right">
+              <Label htmlFor="category" className="text-right">
                 Categoría
               </Label>
-              <Select
-                value={nuevoProducto.categoria}
-                onValueChange={(value) => setNuevoProducto({...nuevoProducto, categoria: value})}
-              >
-                <SelectTrigger className="col-span-3">
+              <Select value={nuevoProducto.category} onValueChange={(value) => setNuevoProducto({...nuevoProducto, category: value})}>
+                <SelectTrigger className="col-span-3 text-neutral-50">
                   <SelectValue placeholder="Selecciona una categoría" />
                 </SelectTrigger>
-                <SelectContent>
-                  {categorias.map((cat) => (
+                <SelectContent style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  {[...new Set(productos.map(it => it.category))].map((cat) => (
                     <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="cantidad" className="text-right">
+              <Label htmlFor="stock" className="text-right">
                 Cantidad
               </Label>
               <Input
-                id="cantidad"
+                id="stock"
                 type="number"
-                value={nuevoProducto.cantidad}
-                onChange={(e) => setNuevoProducto({...nuevoProducto, cantidad: parseInt(e.target.value)})}
+                value={nuevoProducto.stock}
+                onChange={(e) => setNuevoProducto({...nuevoProducto, stock: parseInt(e.target.value)})}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="stockMinimo" className="text-right">
+              <Label htmlFor="minStock" className="text-right">
                 Stock Mínimo
               </Label>
               <Input
-                id="stockMinimo"
+                id="minStock"
                 type="number"
-                value={nuevoProducto.stockMinimo}
-                onChange={(e) => setNuevoProducto({...nuevoProducto, stockMinimo: parseInt(e.target.value)})}
+                value={nuevoProducto.minStock}
+                onChange={(e) => setNuevoProducto({...nuevoProducto, minStock: parseInt(e.target.value)})}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="precio" className="text-right">
+              <Label htmlFor="price" className="text-right">
                 Precio
               </Label>
               <Input
-                id="precio"
+                id="price"
                 type="number"
                 step="0.01"
-                value={nuevoProducto.precio}
-                onChange={(e) => setNuevoProducto({...nuevoProducto, precio: parseFloat(e.target.value)})}
+                value={nuevoProducto.price}
+                onChange={(e) => setNuevoProducto({...nuevoProducto, price: parseFloat(e.target.value)})}
                 className="col-span-3"
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="gap-6">
             <Button onClick={() => setDialogoAbierto(false)}>Cancelar</Button>
-            <Button onClick={handleGuardarProducto}>Guardar</Button>
+            <Button onClick={() => handleGuardarProducto()}>Guardar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Reader Dialog */}
+      <Dialog open={qrReaderOpen} onOpenChange={setQrReaderOpen}>
+        <DialogContent className="bg-neutral-800">
+          <DialogHeader>
+            <DialogTitle className="text-neutral-50">Escanear Código QR</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {/* QR Reader Component */}
+            {/* Replace with actual QR reader component */}
+            <div ref={scannerRef} className="flex justify-center items-center h-64 bg-gray-700">
+            </div>
+          </div>
+          <DialogFooter className="gap-6">
+            <Button onClick={() => setQrReaderOpen(false)}>Cancelar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Diálogo para añadir etiqueta */}
+      <Dialog open={tagDialogOpen} onOpenChange={setTagDialogOpen}>
+        <DialogContent className="bg-neutral-800">
+          <DialogHeader>
+            <DialogTitle className="text-neutral-50">Añadir Etiqueta</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="tagKind" className="text-right">
+                Tipo
+              </Label>
+              <Select value={newTagKind} onValueChange={setNewTagKind}>
+                <SelectTrigger className="col-span-3 text-neutral-50">
+                  <SelectValue placeholder="Selecciona un tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nombre">Nombre</SelectItem>
+                  <SelectItem value="precio">Precio</SelectItem>
+                  <SelectItem value="stock">Stock</SelectItem>
+                  <SelectItem value="categoria">Categoría</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="tagValue" className="text-right">
+                Valor
+              </Label>
+              <Input
+                id="tagValue"
+                value={newTagValue}
+                onChange={(e) => setNewTagValue(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-6">
+            <Button onClick={() => setTagDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={() => handleAddTag()}>Añadir</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   )
 }
+
+export default DashboardInventario

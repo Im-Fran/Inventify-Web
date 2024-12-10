@@ -7,6 +7,7 @@ import RequestVerificationEmail from "@/pages/auth/email/request/request.tsx";
 import EmailVerification from "@/pages/auth/email/verify/verify.tsx";
 import AccountRecovery from "@/pages/auth/password/recovery/recovery.tsx";
 import PasswordReset from "@/pages/auth/password/reset/reset.tsx";
+import DashboardInventario from "@/pages/dashboard/dashboard.tsx";
 
 const routes = [
   {
@@ -59,6 +60,16 @@ const routes = [
           },
         ],
       },
+
+      {
+        path: '/dashboard',
+        children: [
+          {
+            path: '/dashboard',
+            element: <DashboardInventario/>,
+          }
+        ]
+      }
     ],
   },
 ];

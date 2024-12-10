@@ -11,12 +11,12 @@ const apiClient = axios.create({
   validateStatus: (status) => status >= 200 && status < 300 || status === 422,
 })
 
-const csrf = () => apiClient.get('/sanctum/csrf-cookie')
-window.axios = apiClient
-window.csrf_request = csrf
+// const csrf = () => apiClient.get('/sanctum/csrf-cookie')
+// window.axios = apiClient
+// window.csrf_request = csrf
 
 export {
   apiClient,
   apiUrl,
-  csrf,
+  // csrf,
 }

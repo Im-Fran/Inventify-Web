@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import {forwardRef, HTMLAttributes} from "react"
 
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({className = "", ...props}, ref) => <div
@@ -8,7 +9,10 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({classN
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({className = "", ...props}, ref) => <div
   ref={ref}
-  className={`flex flex-col space-y-1.5 p-6 ${className}`}
+  className={clsx([
+    className,
+    'flex flex-col space-y-1.5 p-6',
+  ])}
   {...props}
 />)
 

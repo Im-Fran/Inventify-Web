@@ -3,8 +3,8 @@ import Layout from "@/components/layout/layout.tsx";
 import Home from "@/pages/home/home.tsx";
 import Login from "@/pages/auth/login/login.tsx";
 import Register from "@/pages/auth/register/register.tsx";
-import RequestVerificationEmail from "@/pages/auth/email/request/request-verification.tsx";
-import EmailVerification from "@/pages/auth/email/verify/verify-email.tsx";
+import RequestVerificationEmail from "@/pages/auth/email/request/request.tsx";
+import EmailVerification from "@/pages/auth/email/verify/verify.tsx";
 import AccountRecovery from "@/pages/auth/password/recovery/recovery.tsx";
 import PasswordReset from "@/pages/auth/password/reset/reset.tsx";
 

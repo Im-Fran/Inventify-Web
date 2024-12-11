@@ -3,36 +3,47 @@ import { Label } from "@/components/ui/forms/label.tsx";
 import { Input } from "@/components/ui/forms/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/forms/select.tsx";
 import { Button } from "@/components/ui/button/button.tsx";
-import { Plus } from "lucide-react";
 import {Product, ProductCategory} from "@/types/models/product.ts";
-import { useState } from "react";
+import {useEffect, useState} from "react";
+
+const defaultProduct: Product = {
+  id: '',
+  categoryId: '',
+  name: '',
+  stock: 0,
+  minStock: 0,
+  price: 0,
+  description: '',
+  image: '',
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
 
 export type AddProductDialogProps = {
   categories: ProductCategory[],
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSaveProduct: (product: Product) => void;
-  setNewCategoryDialogOpen: (open: boolean) => void;
 }
 
-const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDialogOpen, categories }: AddProductDialogProps) => {
-  const [nuevoProducto, setNuevoProducto] = useState<Product>({
-    id: '',
-    name: '',
-    stock: 0,
-    minStock: 0,
-    price: 0,
-    categoryId: '',
-    description: '',
-    image: '',
-    createdAt: new Date(),
-    updatedAt: new Date()
-  });
+const AddProductDialog = ({ open, onOpenChange, onSaveProduct, categories }: AddProductDialogProps) => {
+  const [nuevoProducto, setNuevoProducto] = useState<Product>(defaultProduct);
 
   const handleGuardarProducto = () => {
     onSaveProduct(nuevoProducto);
     onOpenChange(false);
   };
+
+  useEffect(() => {
+    if(open) {
+      setNuevoProducto({
+        ...defaultProduct,
+        categoryId: categories.length > 0 ? categories[0].id : '',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+  }, [categories, open, setNuevoProducto]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,7 +94,7 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="category" className="text-right">Categoría</Label>
-            <div className="col-span-3 flex items-center gap-2.5">
+            <div className={`col-span-3 ${nuevoProducto.categoryId ? 'bg-neutral-700' : ''}`}>
               <Select value={nuevoProducto.categoryId} onValueChange={(value) => setNuevoProducto({ ...nuevoProducto, categoryId: value })}>
                 <SelectTrigger className="text-neutral-50">
                   <SelectValue placeholder="Selecciona una categoría" />
@@ -92,9 +103,6 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
                   {categories.map((cat) => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Button variant="ghost" size="sm" onClick={() => setNewCategoryDialogOpen(true)}>
-                <Plus className="h-4 w-4" />
-              </Button>
             </div>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">

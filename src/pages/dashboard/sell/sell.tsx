@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button/button.tsx";
 import { Input } from "@/components/ui/forms/input.tsx";
 import {Plus, Minus, Trash2, Search} from "lucide-react";
 import { toast } from "react-hot-toast";
-import {User} from "@/types/models/user.ts";
 import SearchProductDialog, {SearchProductDialogRef} from "@/pages/dashboard/sell/components/dialogs/search-product-dialog.tsx";
 import SideNav from "@/pages/dashboard/components/sidenav.tsx";
 import Cards from "@/pages/dashboard/sell/components/cards.tsx";
@@ -15,7 +14,6 @@ import {Cart, IndexedCart} from "@/types/models/cart.ts";
 
 const Sell = () => {
   const [, setSoldCarts] = useLocalStorage<IndexedCart[]>('sold_carts', []);
-  const [user] = useLocalStorage<User | null>('login', null);
   const [products, setProducts] = useLocalStorage<Product[]>('products', []);
   const [cart, setCart] = useState<Cart>([]);
   const [barcode, setBarcode] = useState('');
@@ -93,7 +91,7 @@ const Sell = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header user={user} query={null} setQuery={() => {}} />
+      <Header/>
       <div className="flex-1 flex overflow-hidden">
         <SideNav/>
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">

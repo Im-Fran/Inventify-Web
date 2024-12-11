@@ -51,13 +51,34 @@ export const createFakeProduct = (categories: ProductCategory[]): Product => ({
   updatedAt: faker.date.recent(),
 })
 
-export const productCategories = faker.helpers.multiple(createFakeProductCategory, {
-  count: 10,
-})
+export const defaultCategories: ProductCategory[] = [{id: 'panaderia', name: 'Panadería'}, {id: 'galletas', name: 'Galletas'}, {id: 'bebidas', name: 'Bebidas'}, {id: 'snacks', name: 'Snacks'}, {id: 'dulces', name: 'Dulces'}, {id: 'lacteos', name: 'Lácteos'}, {id: 'carnes', name: 'Carnes'}, {id: 'frutas', name: 'Frutas'}, {id: 'verduras', name: 'Verduras'}, {id: 'otros', name: 'Otros'}]
 
-export const products = (categories: ProductCategory[]) => faker.helpers.multiple(() => createFakeProduct(categories), {
-  count: 50,
-})
+export const defaultProducts: Product[] = [
+  {
+    id: '1234567890',
+    categoryId: 'panaderia',
+    name: 'Marraqueta (100g)',
+    price: 230,
+    stock: 1000,
+    minStock: 50,
+    description: 'Pan tradicional chileno.',
+    image: 'https://rubybox-cdn.franciscosolis.cl/marraqueta.png',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: '12984361',
+    categoryId: 'galletas',
+    name: 'Criollitas',
+    price: 1090,
+    stock: 500,
+    minStock: 50,
+    description: 'Galletas McKay Criollitas 80g',
+    image: 'https://rubybox-cdn.franciscosolis.cl/criollitas.webp',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+]
 
 export const currencyFormat = new Intl.NumberFormat('es-CL', {
   style: 'currency',

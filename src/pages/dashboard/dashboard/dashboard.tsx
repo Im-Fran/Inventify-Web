@@ -1,26 +1,21 @@
 import {useState, useEffect, useRef} from 'react'
-import {Product, productCategories, ProductCategory, products as defaultProducts} from "@/types/models/product.ts"
+import {Product, defaultCategories, ProductCategory, defaultProducts} from "@/types/models/product.ts"
 import { useLocalStorage } from '@uidotdev/usehooks'
-import { User } from '@/types/models/user.ts'
 import Header from "@/pages/dashboard/components/header.tsx";
 import Cards from "@/pages/dashboard/dashboard/components/cards.tsx";
 import Inventory from "@/pages/dashboard/dashboard/components/inventory.tsx";
 import AddProductDialog from "@/pages/dashboard/dashboard/components/dialogs/add-product-dialog.tsx";
 import EditProductDialog, {EditProductDialogRef} from "@/pages/dashboard/dashboard/components/dialogs/edit-product-dialog.tsx";
-import NewCategoryDialog from "@/pages/dashboard/dashboard/components/dialogs/new-category-dialog.tsx";
 import {useSearchParams} from "react-router-dom";
 import SideNav from "@/pages/dashboard/components/sidenav.tsx";
 
 const itemsPerPage = 10;
 
 const DashboardInventario = () => {
-  const [login] = useLocalStorage<User | null>('login', null);
-
-  const [categories, setCategories] = useLocalStorage<ProductCategory[]>('categories', productCategories)
-  const [products, setProducts] = useLocalStorage<Product[]>('products', defaultProducts(categories))
+  const [categories] = useLocalStorage<ProductCategory[]>('categories', defaultCategories)
+  const [products, setProducts] = useLocalStorage<Product[]>('products', defaultProducts)
 
   const [isAddProductDialogOpen, setAddProductDialogOpen] = useState(false)
-  const [isNewCategoryDialogOpen, setNewCategoryDialogOpen] = useState(false)
   const editProductDialogRef = useRef<EditProductDialogRef>(null)
 
   const [params] = useSearchParams()
@@ -37,7 +32,7 @@ const DashboardInventario = () => {
 
   return <div className="flex flex-col h-screen bg-background">
     {/* Encabezado */}
-    <Header user={login} query={query} setQuery={(query) => {
+    <Header query={query} setQuery={(query) => {
       setCurrentPage(1)
       setQuery(query || '')
     }}/>
@@ -83,22 +78,13 @@ const DashboardInventario = () => {
         open={isAddProductDialogOpen}
         onOpenChange={setAddProductDialogOpen}
         onSaveProduct={(product) => setProducts([...products.filter(it => it.id !== product.id), product])}
-        setNewCategoryDialogOpen={setNewCategoryDialogOpen}
     />}
 
     {categories && <EditProductDialog
         ref={editProductDialogRef}
         categories={categories}
         onSaveProduct={(product) => setProducts([...products.filter(it => it.id !== product.id), product])}
-        setNewCategoryDialogOpen={setNewCategoryDialogOpen}
     />}
-
-    {/* New Category Dialog */}
-    <NewCategoryDialog
-      open={isNewCategoryDialogOpen}
-      onOpenChange={setNewCategoryDialogOpen}
-      onAddCategory={(category) => setCategories([...categories.filter(it => it.id !== category), {id: category, name: category}])}
-    />
   </div>
 }
 

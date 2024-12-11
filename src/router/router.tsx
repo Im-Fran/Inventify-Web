@@ -12,6 +12,8 @@ const AccountRecovery = lazy(() => import("@/pages/auth/password/recovery/recove
 const PasswordReset = lazy(() => import("@/pages/auth/password/reset/reset.tsx"));
 const DashboardInventario = lazy(() => import("@/pages/dashboard/dashboard/dashboard.tsx"));
 const Sell = lazy(() => import("@/pages/dashboard/sell/sell.tsx"));
+const CategoriesPage = lazy(() => import("@/pages/dashboard/categories/categories.tsx"));
+const SalesReport = lazy(() => import("@/pages/dashboard/sales-report/sales-report.tsx"));
 
 const routes = [
   {
@@ -112,6 +114,22 @@ const routes = [
               </Suspense>
             ),
           },
+          {
+            path: '/dashboard/categories',
+            element: (
+              <Suspense fallback={<Loading/>}>
+                <CategoriesPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: '/dashboard/sales-report',
+            element: (
+              <Suspense fallback={<Loading/>}>
+                <SalesReport/>
+              </Suspense>
+            ),
+          }
         ],
       },
     ],

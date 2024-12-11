@@ -3,21 +3,19 @@ import { Label } from "@/components/ui/forms/label.tsx";
 import { Input } from "@/components/ui/forms/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/forms/select.tsx";
 import { Button } from "@/components/ui/button/button.tsx";
-import { Plus } from "lucide-react";
 import { Product, ProductCategory } from "@/types/models/product.ts";
 import { forwardRef, useImperativeHandle, useState } from "react";
 
 export type EditProductDialogProps = {
   categories: ProductCategory[];
   onSaveProduct: (product: Product) => void;
-  setNewCategoryDialogOpen: (open: boolean) => void;
 }
 
 export type EditProductDialogRef = {
   open: (product: Product) => void;
 }
 
-const EditProductDialog = forwardRef<EditProductDialogRef, EditProductDialogProps>(({ categories, onSaveProduct, setNewCategoryDialogOpen }: EditProductDialogProps, ref) => {
+const EditProductDialog = forwardRef<EditProductDialogRef, EditProductDialogProps>(({ categories, onSaveProduct }: EditProductDialogProps, ref) => {
   const [open, setOpen] = useState(false);
   const [producto, setProducto] = useState<Product | null>(null);
 
@@ -64,6 +62,24 @@ const EditProductDialog = forwardRef<EditProductDialogRef, EditProductDialogProp
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">Descripción (opcional)</Label>
+              <Input
+                id="description"
+                value={producto.description}
+                onChange={(e) => setProducto({ ...producto, description: e.target.value })}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="image" className="text-right">Imagen (opcional)</Label>
+              <Input
+                id="image"
+                value={producto.image}
+                onChange={(e) => setProducto({ ...producto, image: e.target.value })}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="category" className="text-right">Categoría</Label>
               <div className="col-span-3 flex items-center gap-2.5">
                 <Select value={producto.categoryId} onValueChange={(value) => setProducto({ ...producto, categoryId: value })}>
@@ -74,9 +90,6 @@ const EditProductDialog = forwardRef<EditProductDialogRef, EditProductDialogProp
                     {categories.map((cat) => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <Button variant="ghost" size="sm" onClick={() => setNewCategoryDialogOpen(true)}>
-                  <Plus className="h-4 w-4" />
-                </Button>
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">

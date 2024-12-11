@@ -49,7 +49,10 @@ const Inventory = ({ currentPage, itemsPerPage, categories, products, handlePage
         </TableHeader>
         <TableBody>
           {products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((producto) => <TableRow key={producto.id}>
-            <TableCell className="font-medium text-left">{producto.name}</TableCell>
+            <TableCell className="flex items-center justify-start font-medium text-left gap-2.5">
+              <img src={producto.image} alt={producto.name} className="w-12 h-12 object-contain rounded-lg"/>
+              {producto.name}
+            </TableCell>
             <TableCell>{categories.find(c => c.id === producto.categoryId)?.name || 'Sin Categoría'}</TableCell>
             <TableCell>{producto.stock}</TableCell>
             <TableCell>{producto.minStock}</TableCell>

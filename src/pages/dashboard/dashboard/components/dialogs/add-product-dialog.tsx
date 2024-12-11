@@ -49,6 +49,7 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
                 value={nuevoProducto.id}
                 onChange={(e) => setNuevoProducto({ ...nuevoProducto, id: e.target.value })}
                 className="flex-1"
+                required
               />
             </div>
           </div>
@@ -58,6 +59,25 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
               id="name"
               value={nuevoProducto.name}
               onChange={(e) => setNuevoProducto({ ...nuevoProducto, name: e.target.value })}
+              className="col-span-3"
+              required
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="description" className="text-right">Descripción (opcional)</Label>
+            <Input
+              id="description"
+              value={nuevoProducto.description}
+              onChange={(e) => setNuevoProducto({ ...nuevoProducto, description: e.target.value })}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="image" className="text-right">Imagen (opcional)</Label>
+            <Input
+              id="image"
+              value={nuevoProducto.image}
+              onChange={(e) => setNuevoProducto({ ...nuevoProducto, image: e.target.value })}
               className="col-span-3"
             />
           </div>
@@ -83,7 +103,7 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
               id="stock"
               type="number"
               value={nuevoProducto.stock}
-              onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: parseInt(e.target.value) })}
+              onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: parseInt(e.target.value || '0') })}
               className="col-span-3"
             />
           </div>
@@ -93,7 +113,7 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
               id="minStock"
               type="number"
               value={nuevoProducto.minStock}
-              onChange={(e) => setNuevoProducto({ ...nuevoProducto, minStock: parseInt(e.target.value) })}
+              onChange={(e) => setNuevoProducto({ ...nuevoProducto, minStock: parseInt(e.target.value || '0') })}
               className="col-span-3"
             />
           </div>
@@ -102,9 +122,8 @@ const AddProductDialog = ({ open, onOpenChange, onSaveProduct, setNewCategoryDia
             <Input
               id="price"
               type="number"
-              step="0.01"
               value={nuevoProducto.price}
-              onChange={(e) => setNuevoProducto({ ...nuevoProducto, price: parseFloat(e.target.value) })}
+              onChange={(e) => setNuevoProducto({ ...nuevoProducto, price: parseFloat(e.target.value || '0') })}
               className="col-span-3"
             />
           </div>

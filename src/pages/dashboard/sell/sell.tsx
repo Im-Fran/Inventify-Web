@@ -11,9 +11,10 @@ import {User} from "@/types/models/user.ts";
 import SearchProductDialog, {SearchProductDialogRef} from "@/pages/dashboard/sell/components/dialogs/search-product-dialog.tsx";
 import SideNav from "@/pages/dashboard/components/sidenav.tsx";
 import Cards from "@/pages/dashboard/sell/components/cards.tsx";
-import {Cart} from "@/types/models/cart.ts";
+import {Cart, IndexedCart} from "@/types/models/cart.ts";
 
 const Sell = () => {
+  const [, setSoldCarts] = useLocalStorage<IndexedCart[]>('sold_carts', []);
   const [user] = useLocalStorage<User | null>('login', null);
   const [products, setProducts] = useLocalStorage<Product[]>('products', []);
   const [cart, setCart] = useState<Cart>([]);
@@ -74,6 +75,8 @@ const Sell = () => {
         return product;
       })
     );
+
+    setSoldCarts(prev => [...prev, { id: Date.now().toString(), cart }]);
     setCart([]);
     toast.success('Venta finalizada con éxito!');
   };

@@ -4,3 +4,8 @@ export type Cart = {
   product: Product;
   quantity: number;
 }[]
+
+export type IndexedCart = {
+  id: string;
+  cart: Cart;
+}

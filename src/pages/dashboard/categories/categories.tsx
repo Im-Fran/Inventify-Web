@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useLocalStorage } from '@uidotdev/usehooks';
-import {Product, ProductCategory} from '@/types/models/product.ts';
+import {defaultCategories, defaultProducts, Product, ProductCategory} from '@/types/models/product.ts';
 import Header from '@/pages/dashboard/components/header.tsx';
 import SideNav from '@/pages/dashboard/components/sidenav.tsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
@@ -12,8 +12,8 @@ import EditCategoryDialog, { EditCategoryDialogRef } from '@/pages/dashboard/cat
 import toast from "react-hot-toast";
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useLocalStorage<ProductCategory[]>('categories', []);
-  const [products] = useLocalStorage<Product[]>('products', []);
+  const [categories, setCategories] = useLocalStorage<ProductCategory[]>('categories', defaultCategories);
+  const [products] = useLocalStorage<Product[]>('products', defaultProducts);
   const [isNewCategoryDialogOpen, setNewCategoryDialogOpen] = useState(false);
   const editCategoryDialogRef = useRef<EditCategoryDialogRef>(null);
 

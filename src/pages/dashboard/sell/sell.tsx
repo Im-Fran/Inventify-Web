@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import {currencyFormat, Product} from "@/types/models/product";
+import {currencyFormat, defaultProducts, Product} from "@/types/models/product";
 import { useLocalStorage } from '@uidotdev/usehooks';
 import Header from "@/pages/dashboard/components/header.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table/table.tsx";
@@ -10,11 +10,11 @@ import { toast } from "react-hot-toast";
 import SearchProductDialog, {SearchProductDialogRef} from "@/pages/dashboard/sell/components/dialogs/search-product-dialog.tsx";
 import SideNav from "@/pages/dashboard/components/sidenav.tsx";
 import Cards from "@/pages/dashboard/sell/components/cards.tsx";
-import {Cart, IndexedCart} from "@/types/models/cart.ts";
+import {Cart, CartWithId, defaultCarts} from "@/types/models/cart.ts";
 
 const Sell = () => {
-  const [, setSoldCarts] = useLocalStorage<IndexedCart[]>('sold_carts', []);
-  const [products, setProducts] = useLocalStorage<Product[]>('products', []);
+  const [, setSoldCarts] = useLocalStorage<CartWithId[]>('sold_carts', defaultCarts);
+  const [products, setProducts] = useLocalStorage<Product[]>('products', defaultProducts);
   const [cart, setCart] = useState<Cart>([]);
   const [barcode, setBarcode] = useState('');
   const searchProductDialogRef = useRef<SearchProductDialogRef>(null)
@@ -74,7 +74,7 @@ const Sell = () => {
       })
     );
 
-    setSoldCarts(prev => [...prev, { id: Date.now().toString(), cart }]);
+    setSoldCarts(prev => [...prev, { id: new Date().getTime().toString(), cart }]);
     setCart([]);
     toast.success('Venta finalizada con éxito!');
   };

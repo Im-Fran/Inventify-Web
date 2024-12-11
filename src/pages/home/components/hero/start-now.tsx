@@ -13,7 +13,7 @@ const StartNow = () => <section className="w-full py-12 md:py-24 lg:py-32 bg-pin
           Únete a miles de empresas que ya están utilizando RubyBox para optimizar sus operaciones.
         </p>
       </div>
-      <Link to={"/register"}>
+      <Link to={"/auth/register"}>
         <Button>
           Comenzar prueba gratuita
           <ArrowRight className="ml-2 h-4 w-4"/>

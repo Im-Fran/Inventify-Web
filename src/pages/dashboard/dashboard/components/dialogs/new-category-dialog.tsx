@@ -36,7 +36,10 @@ const NewCategoryDialog = ({ open, onOpenChange, onAddCategory}: NewCategoryDial
       </div>
       <DialogFooter className="gap-6">
         <Button onClick={() => onOpenChange(false)}>Cancelar</Button>
-        <Button onClick={() => onAddCategory(newCategory)}>Añadir</Button>
+        <Button onClick={() => {
+          onAddCategory(newCategory);
+          onOpenChange(false);
+        }}>Añadir</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

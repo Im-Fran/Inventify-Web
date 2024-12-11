@@ -42,7 +42,7 @@ const Login = () => {
     setLogin(user)
 
     // Redirect to home.
-    navigate('/dashboard')
+    navigate('/dashboard/inventory')
     toast.success('¡Bienvenido de vuelta!', {
       duration: 5000
     })

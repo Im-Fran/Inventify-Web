@@ -2,21 +2,37 @@ import { faker } from '@faker-js/faker';
 
 export type Product = {
   id: string;
+  categoryId: string;
   name: string;
   price: number;
   stock: number;
   minStock: number;
   description: string;
   image: string;
-  category: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export const createFakeProduct = (): Product => ({
+export type ProductCategory = {
+  id: string;
+  name: string;
+}
+
+export const generateUuid = (): string => faker.string.uuid()
+
+export const createFakeProductCategory = (): ProductCategory => ({
+  id: faker.string.uuid(),
+  name: faker.commerce.department(),
+})
+
+export const createFakeProduct = (categories: ProductCategory[]): Product => ({
   id: faker.commerce.isbn({
     separator: '',
   }),
+  categoryId: categories[faker.number.int({
+    min: 0,
+    max: categories.length - 1,
+  })].id,
   name: faker.commerce.productName(),
   price: parseFloat(faker.commerce.price({
     symbol: '$',
@@ -31,12 +47,15 @@ export const createFakeProduct = (): Product => ({
   minStock: 1,
   description: faker.lorem.paragraph(),
   image: faker.image.url(),
-  category: faker.commerce.department(),
   createdAt: faker.date.recent(),
   updatedAt: faker.date.recent(),
 })
 
-export const products = faker.helpers.multiple(createFakeProduct, {
+export const productCategories = faker.helpers.multiple(createFakeProductCategory, {
+  count: 10,
+})
+
+export const products = (categories: ProductCategory[]) => faker.helpers.multiple(() => createFakeProduct(categories), {
   count: 50,
 })
 
